@@ -29,8 +29,13 @@
             transform: translate(-50%, -50%);
             white-space: nowrap;
         }
+
         .timeData {
             font-size: 100pt;
+        }
+
+        .flipRates {
+            text-align: center;
         }
     </style>
 </head>
@@ -39,11 +44,13 @@
     <div class='fullscreenDiv'>
         <div class="centered">
             <div class="timeData">Time: </span><span class="timeData" id="mainContent"></div>
-            <a href="index.html?flipRate=1">1</a>, 
-            <a href="index.html?flipRate=5">5</a>, 
-            <a href="index.html?flipRate=10">10</a>, 
-            <a href="index.html?flipRate=20">20</a>, 
-            <a href="index.html?flipRate=30">30</a>
+            <div class="flipRates">
+                <a href="index.html?flipRate=1">1</a>,
+                <a href="index.html?flipRate=5">5</a>,
+                <a href="index.html?flipRate=10">10</a>,
+                <a href="index.html?flipRate=20">20</a>,
+                <a href="index.html?flipRate=30">30</a>
+            </div>
             <div id="listContent">
 
             </div>
@@ -51,13 +58,13 @@
     </div>
 
     <script>
-        
-        function twoDigits(data){
-            return (data.toString().length == 1 ? "0" : "") + data.toString();    
+
+        function twoDigits(data) {
+            return (data.toString().length == 1 ? "0" : "") + data.toString();
         }
 
         function calculateFlipData(dateValue, flipRate) {
-            return (dateValue.getSeconds() + dateValue.getMinutes()*60 + dateValue.getHours()*60*60) % (flipRate*2);
+            return (dateValue.getSeconds() + dateValue.getMinutes() * 60 + dateValue.getHours() * 60 * 60) % (flipRate * 2);
         }
 
         function calculateFlipValue(flipData, flipRate) {
@@ -65,15 +72,15 @@
         }
 
         function addSeconds(dateValue, seconds) {
-            return new Date(dateValue.getTime() - (seconds*1000));
+            return new Date(dateValue.getTime() - (seconds * 1000));
         }
 
         var href = window.location.href;
         console.log('href', href);
 
         var flipRate = 30;
-        if(href.indexOf('?flipRate=') > 0) {
-            flipRate = parseInt(href.substring(href.indexOf('?flipRate=')+10)); // 10 = length of ?flipRate=
+        if (href.indexOf('?flipRate=') > 0) {
+            flipRate = parseInt(href.substring(href.indexOf('?flipRate=') + 10)); // 10 = length of ?flipRate=
         }
         console.log('flipRate', flipRate);
 
@@ -84,13 +91,13 @@
         var flipValue = calculateFlipValue(flipData, flipRate);
         console.log('flipValue', flipValue);
 
-        var content = `<span class="hour">${twoDigits(now.getHours())}</span>:`+
-                      `<span class="min">${twoDigits(now.getMinutes())}</span>:`+
-                      `<span class="sec">${twoDigits(now.getSeconds())}</span> | ` + 
-                      `<span class="flip">${flipValue}</span>`
+        var content = `<span class="hour">${twoDigits(now.getHours())}</span>:` +
+            `<span class="min">${twoDigits(now.getMinutes())}</span>:` +
+            `<span class="sec">${twoDigits(now.getSeconds())}</span> | ` +
+            `<span class="flip">${flipValue}</span>`
         document.getElementById('mainContent').innerHTML = content;
 
-        var listContent = `<ul>
+        var listContent = `<h2>History</h2><ul>
         <li><span class="ListItemContent">value 1-${calculateFlipValue(calculateFlipData(addSeconds(now, flipRate * 0), flipRate), flipRate)}</span>: ${addSeconds(now, flipRate * 0).toTimeString()}</li>
         <li><span class="ListItemContent">value 2-${calculateFlipValue(calculateFlipData(addSeconds(now, flipRate * 1), flipRate), flipRate)}</span>: ${addSeconds(now, flipRate * 1).toTimeString()}</li>
         <li><span class="ListItemContent">value 3-${calculateFlipValue(calculateFlipData(addSeconds(now, flipRate * 2), flipRate), flipRate)}</span>: ${addSeconds(now, flipRate * 2).toTimeString()}</li>
